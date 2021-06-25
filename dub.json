@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"Susan"
+	],
+	"copyright": "Copyright © 2021, Susan",
+	"description": "library for basic constructs",
+	"license": "AGPL-3.0 or later",
+	"name": "geometry"
+}

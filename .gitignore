@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/geometry
+geometry.so
+geometry.dylib
+geometry.dll
+geometry.a
+geometry.lib
+geometry-test-*
+*.exe
+*.o
+*.obj
+*.lst
