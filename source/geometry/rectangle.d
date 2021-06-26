@@ -8,16 +8,16 @@ struct Rectangle
 
 	//TODO: d properties aren't  properly supported yet
 	@safe nothrow pure int x() const { return position.x; }
-	@safe nothrow void x(in int val) { position.x = val; }
+	@safe nothrow pure void x(in int val) { position.x = val; }
 
 	@safe nothrow pure int y() const { return position.y; }
-	@safe nothrow void y(int val) { position.y = val; }
+	@safe nothrow pure void y(int val) { position.y = val; }
 
 	@safe nothrow pure int w() const  { return size.x; }
-	@safe nothrow void w(int val) { size.x = val; }
+	@safe nothrow pure void w(int val) { size.x = val; }
 
 	@safe nothrow pure int h() const { return size.y; }
-	@safe nothrow void h(int val) { size.y = val; }
+	@safe nothrow pure void h(int val) { size.y = val; }
 
 	alias width = w;
 	alias height = h;
