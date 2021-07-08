@@ -56,6 +56,10 @@ unittest
 
 	static assert(Angle.radToDeg(pi) == 180);
 	static assert(Angle.degToRad(180) == pi);
+
+	Angle angle;
+
+	assert(!isNaN(angle.value));
 }
 
 unittest
