@@ -1,5 +1,5 @@
 module geometry.angle;
-import std.math : PI;
+import std.math : PI, isNaN;
 alias pi = PI;
 auto tau = (pi * 2);
 
@@ -17,7 +17,7 @@ out(r; r <= max)
 struct Angle
 {
 	///in degrees, with zero facing right //TODO: change to radians?
-	float value;
+	float value = 0;
 
 	enum Max = 360;
 	enum Min = 0;
@@ -26,6 +26,7 @@ struct Angle
 
 	invariant()
 	{
+		assert(!isNaN(value));
 		assert(value >= Min);
 		assert(value <= Max);
 	}
