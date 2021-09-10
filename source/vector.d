@@ -14,6 +14,9 @@ struct Vector2(T)
 	static assert(isNumeric!T);
 	static assert(__traits(isPOD, Vector2!T));
 
+	T x;
+	T y;
+
 	this(T xy)
 	{
 		x = xy;
@@ -26,8 +29,25 @@ struct Vector2(T)
 		this.y = y;
 	}
 
-	T x;
-	T y;
+	auto inout opBinary(string op, V : Vector2!T, T)(in V rhs) pure @safe @nogc nothrow
+	{
+		static if (op != "+" && op != "-" && op != "*" && op != "/")
+		{
+			static assert("not yet implemented");
+		}
+
+		mixin(
+			"Vector2!(typeof(x " ~ op ~ " rhs.x)) result;
+			result.x = x " ~ op ~ " rhs.x;
+			result.y = y " ~ op ~ " rhs.y;
+			return result;"
+		);
+	}
+
+	auto inout opCast(V : Vector2!T, T)() pure @safe @nogc nothrow
+	{
+		return (V(x, y));
+	}
 }
 
 struct Vector3(T)
