@@ -44,6 +44,22 @@ struct Vector2(T)
 		);
 	}
 
+	auto inout opBinary(string op, U)(in U rhs) pure @safe @nogc nothrow
+	{
+		static assert(isNumeric!U);
+		static if ( op != "*" && op != "/")
+		{
+			static assert("not yet implemented");
+		}
+
+		mixin(
+			"Vector2!(typeof(x " ~ op ~ " rhs)) result;
+			result.x = x " ~ op ~ " rhs;
+			result.y = y " ~ op ~ " rhs;
+			return result;"
+		);
+	}
+
 	auto inout opCast(V : Vector2!T, T)() pure @safe @nogc nothrow
 	{
 		return (V(x, y));
