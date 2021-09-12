@@ -72,6 +72,21 @@ struct Vector2(T)
 		);
 	}
 
+	/// ditto
+	void opOpAssign(string op, U)(in U rhs) pure @safe @nogc nothrow
+	{
+		static assert(isNumeric!U);
+		static if ( op != "*" && op != "/")
+		{
+			static assert(false, "not yet implemented");
+		}
+
+		mixin(
+			"x = x " ~ op ~ " rhs;
+			y = y " ~ op ~ " rhs;"
+		);
+	}
+
 	/// Casts a 2d vector from one type to another.
 	auto inout opCast(V : Vector2!T, T)() pure @safe @nogc nothrow const
 	{
