@@ -2,8 +2,8 @@
 	"authors": [
 		"Susan"
 	],
-	"copyright": "Copyright © 2021, Susan",
-	"description": "library for basic constructs",
+	"copyright": "Copyright © 2021, Hybrid Development Team",
+	"description": "library for basic geometric constructs",
 	"license": "AGPL-3.0 or later",
 	"name": "geometry"
 }
