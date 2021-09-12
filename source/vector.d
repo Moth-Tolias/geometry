@@ -33,7 +33,7 @@ struct Vector2(T)
 	{
 		static if (op != "+" && op != "-" && op != "*" && op != "/")
 		{
-			static assert("not yet implemented");
+			static assert(false, "not yet implemented");
 		}
 
 		mixin(
@@ -49,7 +49,7 @@ struct Vector2(T)
 		static assert(isNumeric!U);
 		static if ( op != "*" && op != "/")
 		{
-			static assert("not yet implemented");
+			static assert(false, "not yet implemented");
 		}
 
 		mixin(
@@ -60,7 +60,7 @@ struct Vector2(T)
 		);
 	}
 
-	auto inout opCast(V : Vector2!T, T)() pure @safe @nogc nothrow
+	auto inout opCast(V : Vector2!T, T)() pure @safe @nogc nothrow const
 	{
 		return (V(x, y));
 	}
