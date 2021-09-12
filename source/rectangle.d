@@ -1,30 +1,88 @@
+/**
+* Rectangles, and functions pertaining to them.
+* Authors: Susan
+* Date: 2021-09-12
+* Licence: AGPL-3.0 or later
+* Copyright: Hybrid Development Team, 2021
+*/
+
 module geometry.rectangle;
 import geometry.vector;
 
+///T can be any numeric type.
 struct Rectangle(T)
 {
-	Vector2!T position;
-	Vector2!T size;
+	import std.traits;
+	static assert(isNumeric!T);
+	static assert(__traits(isPOD, Rectangle!T));
+
+	Vector2!T position; ///
+	Vector2!T size; ///rectangles may have sizes of zero, but may never be negative.
 
 	invariant(size.x >= 0);
 	invariant(size.y >= 0);
 
-	@property @safe @nogc nothrow pure T x() const { return position.x; }
-	@property @safe @nogc nothrow void x(in T rhs) { position.x = rhs; }
+	/// x component of position.
+	@property @safe @nogc nothrow pure T x() const
+	{
+		return position.x;
+	}
 
-	@property @safe @nogc nothrow pure T y() const { return position.y; }
-	@property @safe @nogc nothrow void y(in T rhs) { position.y = rhs; }
+	/// ditto
+	@property @safe @nogc nothrow void x(in T rhs)
+	{
+		position.x = rhs;
+	}
 
-	@property @safe @nogc nothrow pure T w() const  { return size.x; }
-	@property @safe @nogc nothrow void w(in T rhs) { size.x = rhs; }
+	/// y component of position.
+	@property @safe @nogc nothrow pure T y() const
+	{
+		return position.y;
+	}
 
-	@property @safe @nogc nothrow pure T h() const { return size.y; }
-	@property @safe @nogc nothrow void h(in T rhs) { size.y = rhs; }
+	/// ditto
+	@property @safe @nogc nothrow void y(in T rhs)
+	{
+		position.y = rhs;
+	}
 
-	alias width = w;
-	alias height = h;
+	/// width component of size.
+	@property @safe @nogc nothrow pure T width() const
+	{
+		return size.x;
+	}
+
+	/// ditto
+	@property @safe @nogc nothrow void width(in T rhs)
+	{
+		size.x = rhs;
+	}
+
+	/// ditto
+	alias w = width;
+
+	/// height component of size.
+	@property @safe @nogc nothrow pure T height() const
+	{
+		return size.y;
+	}
+
+	/// ditto
+	@property @safe @nogc nothrow void height(in T rhs)
+	{
+		size.y = rhs;
+	}
+
+	/// ditto
+	alias h = height;
 }
 
+/**
+* Returns: whether a point is within the bounds of the rectangle.
+* Params:
+*	r = a rectangle
+*	point = a 2d vector
+*/
 static bool pointInRectangle(R : Rectangle!(T), T)(in R r, in Vector2!(T) point) pure @safe @nogc nothrow
 {
 	return ((point.x >= r.x) && (point.x <= (r.x + r.w))) && ((point.y >= r.y) && (point.y <= (r.y + r.h)));

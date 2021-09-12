@@ -1,34 +1,45 @@
+/**
+* Types and functions pertaining to euclidian vectors.
+* Authors: Susan
+* Date: 2021-09-12
+* Licence: AGPL-3.0 or later
+* Copyright: Hybrid Development Team, 2021
+*/
+
 module geometry.vector;
 
-/*struct Vector(int N = 2, T = int)
-{
-	import std.traits;
-	static assert(N >= 0);
-	static assert(isNumeric!T);
-	static assert(__traits(isPOD, Vector!(N,T)));
-}*/
-
+/// 2d vector. T can be any numeric type.
 struct Vector2(T)
 {
 	import std.traits;
 	static assert(isNumeric!T);
 	static assert(__traits(isPOD, Vector2!T));
 
-	T x;
-	T y;
+	T x; /// X and Y components.
+	T y; /// ditto
 
-	this(T xy)
-	{
-		x = xy;
-		y = xy;
-	}
-
-	this(T x, T y)
+	/**
+	* Returns: a 2d vector.
+	* Params:
+	*	x = the X component
+	*	y = the Y component
+	*/
+	this(in T x, in T y)
 	{
 		this.x = x;
 		this.y = y;
 	}
 
+	/**
+	* Returns: a 2d vector with both the X and Y components set to xy.
+	*/
+	this(in T xy)
+	{
+		x = xy;
+		y = xy;
+	}
+
+	/// Vector addition, subtraction, and multiplication.
 	auto inout opBinary(string op, V : Vector2!T, T)(in V rhs) pure @safe @nogc nothrow
 	{
 		static if (op != "+" && op != "-" && op != "*" && op != "/")
@@ -44,6 +55,7 @@ struct Vector2(T)
 		);
 	}
 
+	/// Scalar multiplication.
 	auto inout opBinary(string op, U)(in U rhs) pure @safe @nogc nothrow
 	{
 		static assert(isNumeric!U);
@@ -60,20 +72,9 @@ struct Vector2(T)
 		);
 	}
 
+	/// Casts a 2d vector from one type to another.
 	auto inout opCast(V : Vector2!T, T)() pure @safe @nogc nothrow const
 	{
 		return (V(x, y));
 	}
 }
-
-struct Vector3(T)
-{
-	import std.traits;
-	static assert(isNumeric!T);
-	static assert(__traits(isPOD, Vector3!T));
-
-	T x;
-	T y;
-	T z;
-}
-
