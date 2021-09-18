@@ -55,6 +55,20 @@ struct Vector2(T)
 		);
 	}
 
+	/// ditto
+	void opOpAssign(string op, V : Vector2!U, U)(in V rhs) pure @safe @nogc nothrow
+	{
+		static if (op != "+" && op != "-" && op != "*" && op != "/")
+		{
+			static assert(false, "not yet implemented");
+		}
+
+		mixin(
+			"x = cast(T)(x " ~ op ~ " rhs.x);
+			y = cast(T)(y " ~ op ~ " rhs.y);"
+		);
+	}
+
 	/// Scalar multiplication.
 	auto inout opBinary(string op, U)(in U rhs) pure @safe @nogc nothrow
 	{
