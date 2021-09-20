@@ -73,11 +73,12 @@ unittest
 {
 	static assert(__traits(isPOD, Angle));
 
-	static assert(Angle.radToDeg(pi) == 180);
-	static assert(Angle.degToRad(180) == pi);
+	static assert(radToDeg(pi) == 180);
+	static assert(degToRad(180) == pi);
 
 	Angle angle;
 
+	import std.math : isNaN;
 	assert(!isNaN(angle.value));
 }
 
