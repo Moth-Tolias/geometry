@@ -8,6 +8,8 @@
 
 module geometry.vector;
 
+import geometry.angle;
+
 /// 2d vector. T can be any numeric type.
 struct Vector2(T)
 {
@@ -17,6 +19,19 @@ struct Vector2(T)
 
 	T x; /// X and Y components.
 	T y; /// ditto
+
+	/// length of vector.
+	@property float length() pure @safe @nogc nothrow const
+	{
+		import std.math : sqrt;
+		return sqrt(cast(float)(x*x) + (y*y));
+	}
+
+	/// direction of vector.
+	@property Angle direction() pure @safe @nogc nothrow const
+	{
+		return Angle(0); //fixme
+	}
 
 	/**
 	* Returns: a 2d vector.
@@ -39,7 +54,7 @@ struct Vector2(T)
 		y = xy;
 	}
 
-	/// Vector addition, subtraction, and multiplication.
+	/// Vector addition, subtraction, and scaling.
 	auto inout opBinary(string op, V : Vector2!T, T)(in V rhs) pure @safe @nogc nothrow
 	{
 		static if (op != "+" && op != "-" && op != "*" && op != "/")
@@ -102,8 +117,47 @@ struct Vector2(T)
 	}
 
 	/// Casts a 2d vector from one type to another.
-	auto inout opCast(V : Vector2!T, T)() pure @safe @nogc nothrow const
+	auto inout opCast(V : Vector2!U, U)() pure @safe @nogc nothrow const
 	{
 		return (V(x, y));
 	}
+
+	/// sets the vector to its corresponding unit vector.
+	void normalise() @safe @nogc nothrow
+	{
+		immutable temp = this.normalised;
+		this.x = cast(T)temp.x;
+		this.y = cast(T)temp.y;
+	}
+
+	/// returns the unit vector this vector corresponds to.
+	Vector2!float normalised() pure @safe @nogc nothrow const
+	{
+		immutable len = this.length;
+		if (len == 0)
+		{
+			return cast(Vector2!float)this;
+		} else {
+			return (this / len);
+		}
+	}
+}
+
+/// returns the dot product of two vectors.
+static float dot(V : Vector2!T, T, W : Vector2!U, U)(in V lhs, in W rhs) pure @safe @nogc nothrow
+{
+	return (lhs.x * rhs.x) + (lhs.y * rhs.y);
+}
+
+@safe @nogc nothrow unittest
+{
+	immutable a = Vector2!int(69, 420);
+	immutable b = Vector2!int(-10, +10);
+
+	assert(a + b == b + a); //commutative
+	assert(dot(a, b) == dot(b,a)); //similarly,
+
+	immutable v = Vector2!int(1, 0);
+	assert(v.length == 1);
+	assert(dot(v,v) == 1);
 }
