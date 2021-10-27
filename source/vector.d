@@ -122,6 +122,16 @@ struct Vector2(T)
 		return (V(x, y));
 	}
 
+	bool opEquals(V : Vector2!U, U)(in V rhs) pure @safe @nogc nothrow const
+	{
+		return (x == rhs.x) && (y == rhs.y);
+	}
+
+	size_t toHash() pure @safe @nogc nothrow const
+	{
+		return cast(size_t)(x + y);
+	}
+
 	/// sets the vector to its corresponding unit vector.
 	void normalise() @safe @nogc nothrow
 	{
