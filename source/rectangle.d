@@ -83,17 +83,20 @@ struct Rectangle(T)
 *	r = a rectangle
 *	point = a 2d vector
 */
-static bool pointInRectangle(R : Rectangle!(T), T)(in R r, in Vector2!(T) point) pure @safe @nogc nothrow
+static bool pointInRectangle(R : Rectangle!(T), T, U)(in R r, in Vector2!(U) point) pure @safe @nogc nothrow
 {
 	return ((point.x >= r.x) && (point.x <= (r.x + r.w))) && ((point.y >= r.y) && (point.y <= (r.y + r.h)));
 }
 
-unittest
+@safe @nogc nothrow unittest
 {
-	immutable auto r = Rectangle!int(Vector2!(int)(0), Vector2!(int)(32));
-	assert(r.pointInRectangle(Vector2!(int)(16)));
+	immutable r = Rectangle!int(Vector2!(int)(0), Vector2!(int)(32));
+	assert(r.pointInRectangle(Vector2!(ubyte)(16)));
 	assert(r.pointInRectangle(Vector2!(int)(0)));
 	assert(r.pointInRectangle(Vector2!(int)(32)));
 
 	assert(! r.pointInRectangle(Vector2!(int)(-16)));
+
+	immutable r2 = Rectangle!size_t(Vector2!(size_t)(0), Vector2!(size_t)(size_t.max));
+	assert(r2.pointInRectangle(Vector2!(int)(ubyte.max)));
 }
