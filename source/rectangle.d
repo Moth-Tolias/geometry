@@ -91,11 +91,17 @@ static bool pointInRectangle(R : Rectangle!(T, U), T, U, V)(in R r, in Vector2!(
 
 alias Rectangle(T) = Rectangle!(T, T);
 
-///allows a struct to act as, and be cast to,a rectangle.
+///allows a struct to act as, and be cast to, a rectangle.
 mixin template actAsRectangle(PositionType, SizeType)
 {
 	Vector2!(PositionType) position;
 	Vector2!(SizeType) size;
+
+	@property x() const @safe @nogc pure nothrow { return position.x; }
+	@property y() const @safe @nogc pure nothrow { return position.y; }
+
+	@property void x(in PositionType rhs) @safe @nogc nothrow { size.x = rhs; }
+	@property void y(in PositionType rhs) @safe @nogc nothrow { size.y = rhs; }
 
 	@property w() const @safe @nogc pure nothrow { return size.x; }
 	@property h() const @safe @nogc pure nothrow { return size.y; }
