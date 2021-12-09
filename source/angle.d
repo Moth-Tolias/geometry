@@ -69,7 +69,7 @@ out(r; r <= max)
 	return delta + min;
 }
 
-unittest
+@safe unittest
 {
 	static assert(__traits(isPOD, Angle));
 
@@ -82,7 +82,7 @@ unittest
 	assert(!isNaN(angle.value));
 }
 
-unittest
+@safe unittest
 {
 	Angle a = { 90 };
 	Angle b = { 45 };
