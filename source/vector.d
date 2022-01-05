@@ -14,6 +14,7 @@ import geometry.angle;
 struct Vector2(T)
 {
 	import std.traits;
+
 	static assert(isNumeric!T);
 	static assert(__traits(isPOD, Vector2!T));
 
@@ -24,7 +25,7 @@ struct Vector2(T)
 	@property float length() pure @safe @nogc nothrow const
 	{
 		import std.math : sqrt;
-		return sqrt(cast(float)(x*x) + (y*y));
+		return sqrt(cast(float) (x * x) + (y * y));
 	}
 
 	/// direction of vector.
@@ -55,74 +56,66 @@ struct Vector2(T)
 	}
 
 	/// Vector addition, subtraction, and scaling.
-	auto inout opBinary(string op, V : Vector2!T, T)(in V rhs) pure @safe @nogc nothrow
+	auto inout opBinary(string op, V: Vector2!T, T)(in V rhs) pure @safe @nogc nothrow
 	{
 		static if (op != "+" && op != "-" && op != "*" && op != "/")
 		{
 			static assert(false, "not yet implemented");
 		}
 
-		mixin(
-			"Vector2!(typeof(x " ~ op ~ " rhs.x)) result;
+		mixin("Vector2!(typeof(x " ~ op ~ " rhs.x)) result;
 			result.x = x " ~ op ~ " rhs.x;
 			result.y = y " ~ op ~ " rhs.y;
-			return result;"
-		);
+			return result;");
 	}
 
 	/// ditto
-	void opOpAssign(string op, V : Vector2!U, U)(in V rhs) pure @safe @nogc nothrow
+	void opOpAssign(string op, V: Vector2!U, U)(in V rhs) pure @safe @nogc nothrow
 	{
 		static if (op != "+" && op != "-" && op != "*" && op != "/")
 		{
 			static assert(false, "not yet implemented");
 		}
 
-		mixin(
-			"x = cast(T)(x " ~ op ~ " rhs.x);
-			y = cast(T)(y " ~ op ~ " rhs.y);"
-		);
+		mixin("x = cast(T)(x " ~ op ~ " rhs.x);
+			y = cast(T)(y " ~ op ~ " rhs.y);");
 	}
 
 	/// Scalar multiplication.
 	auto inout opBinary(string op, U)(in U rhs) pure @safe @nogc nothrow
 	{
 		static assert(isNumeric!U);
-		static if ( op != "*" && op != "/")
+		static if (op != "*" && op != "/")
 		{
 			static assert(false, "not yet implemented");
 		}
 
-		mixin(
-			"Vector2!(typeof(x " ~ op ~ " rhs)) result;
+		mixin("Vector2!(typeof(x " ~ op ~ " rhs)) result;
 			result.x = x " ~ op ~ " rhs;
 			result.y = y " ~ op ~ " rhs;
-			return result;"
-		);
+			return result;");
 	}
 
 	/// ditto
 	void opOpAssign(string op, U)(in U rhs) pure @safe @nogc nothrow
 	{
 		static assert(isNumeric!U);
-		static if ( op != "*" && op != "/")
+		static if (op != "*" && op != "/")
 		{
 			static assert(false, "not yet implemented");
 		}
 
-		mixin(
-			"x = x " ~ op ~ " rhs;
-			y = y " ~ op ~ " rhs;"
-		);
+		mixin("x = x " ~ op ~ " rhs;
+			y = y " ~ op ~ " rhs;");
 	}
 
 	/// Casts a 2d vector from one type to another.
-	auto inout opCast(V : Vector2!U, U)() pure @safe @nogc nothrow const
+	auto inout opCast(V: Vector2!U, U)() pure @safe @nogc nothrow const
 	{
 		return (V(x, y));
 	}
 
-	bool opEquals(V : Vector2!U, U)(in V rhs) pure @safe @nogc nothrow const
+	bool opEquals(V: Vector2!U, U)(in V rhs) pure @safe @nogc nothrow const
 	{
 		return (x == rhs.x) && (y == rhs.y);
 	}
@@ -136,8 +129,8 @@ struct Vector2(T)
 	void normalise() @safe @nogc nothrow
 	{
 		immutable temp = this.normalised;
-		this.x = cast(T)temp.x;
-		this.y = cast(T)temp.y;
+		this.x = cast(T) temp.x;
+		this.y = cast(T) temp.y;
 	}
 
 	/// returns the unit vector this vector corresponds to.
@@ -146,15 +139,17 @@ struct Vector2(T)
 		immutable len = this.length;
 		if (len == 0)
 		{
-			return cast(Vector2!float)this;
-		} else {
+			return cast(Vector2!float) this;
+		}
+		else
+		{
 			return (this / len);
 		}
 	}
 }
 
 /// returns the dot product of two vectors.
-static float dot(V : Vector2!T, T, W : Vector2!U, U)(in V lhs, in W rhs) pure @safe @nogc nothrow
+float dot(V: Vector2!T, T, W: Vector2!U, U)(in V lhs, in W rhs) pure @safe @nogc nothrow
 {
 	return (lhs.x * rhs.x) + (lhs.y * rhs.y);
 }
@@ -165,9 +160,9 @@ static float dot(V : Vector2!T, T, W : Vector2!U, U)(in V lhs, in W rhs) pure @s
 	immutable b = Vector2!int(-10, +10);
 
 	assert(a + b == b + a); //commutative
-	assert(dot(a, b) == dot(b,a)); //similarly,
+	assert(dot(a, b) == dot(b, a)); //similarly,
 
 	immutable v = Vector2!int(1, 0);
 	assert(v.length == 1);
-	assert(dot(v,v) == 1);
+	assert(dot(v, v) == 1);
 }

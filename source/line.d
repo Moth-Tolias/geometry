@@ -13,6 +13,7 @@ import geometry.vector;
 struct Line(T)
 {
 	import std.traits;
+
 	static assert(isNumeric!T);
 	static assert(__traits(isPOD, Line!T));
 

@@ -13,6 +13,7 @@ import geometry.vector;
 struct Rectangle(PositionType, SizeType)
 {
 	import std.traits;
+
 	static assert(isNumeric!PositionType);
 	static assert(isNumeric!(SizeType));
 	static assert(__traits(isPOD, Rectangle!(PositionType, SizeType)));
@@ -20,8 +21,8 @@ struct Rectangle(PositionType, SizeType)
 	Vector2!PositionType position; ///
 	Vector2!SizeType size; ///rectangles may have sizes of zero, but may never be negative.
 
-	invariant(size.x >= 0);
-	invariant(size.y >= 0);
+	invariant (size.x >= 0);
+	invariant (size.y >= 0);
 
 	/// x component of position.
 	@property @safe @nogc nothrow pure PositionType x() const
@@ -97,17 +98,45 @@ mixin template actAsRectangle(PositionType, SizeType)
 	Vector2!(PositionType) position;
 	Vector2!(SizeType) size;
 
-	@property x() const @safe @nogc pure nothrow { return position.x; }
-	@property y() const @safe @nogc pure nothrow { return position.y; }
+	@property x() const @safe @nogc pure nothrow
+	{
+		return position.x;
+	}
 
-	@property void x(in PositionType rhs) @safe @nogc nothrow { size.x = rhs; }
-	@property void y(in PositionType rhs) @safe @nogc nothrow { size.y = rhs; }
+	@property y() const @safe @nogc pure nothrow
+	{
+		return position.y;
+	}
 
-	@property w() const @safe @nogc pure nothrow { return size.x; }
-	@property h() const @safe @nogc pure nothrow { return size.y; }
+	@property void x(in PositionType rhs) @safe @nogc nothrow
+	{
+		size.x = rhs;
+	}
 
-	@property void w(in SizeType rhs) @safe @nogc nothrow { size.x = rhs; }
-	@property void h(in SizeType rhs) @safe @nogc nothrow { size.y = rhs; }
+	@property void y(in PositionType rhs) @safe @nogc nothrow
+	{
+		size.y = rhs;
+	}
+
+	@property w() const @safe @nogc pure nothrow
+	{
+		return size.x;
+	}
+
+	@property h() const @safe @nogc pure nothrow
+	{
+		return size.y;
+	}
+
+	@property void w(in SizeType rhs) @safe @nogc nothrow
+	{
+		size.x = rhs;
+	}
+
+	@property void h(in SizeType rhs) @safe @nogc nothrow
+	{
+		size.y = rhs;
+	}
 
 	Rectangle opCast(Rectangle)() pure @safe @nogc nothrow const
 	{
@@ -128,7 +157,7 @@ mixin template actAsRectangle(T)
 	assert(r.pointInRectangle(Vector2!(int)(0)));
 	assert(r.pointInRectangle(Vector2!(int)(32)));
 
-	assert(! r.pointInRectangle(Vector2!(int)(-16)));
+	assert(!r.pointInRectangle(Vector2!(int)(-16)));
 
 	immutable r2 = Rectangle!size_t(Vector2!(size_t)(0), Vector2!(size_t)(size_t.max));
 	assert(r2.pointInRectangle(Vector2!(int)(ubyte.max)));
