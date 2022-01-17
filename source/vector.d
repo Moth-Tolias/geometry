@@ -112,7 +112,7 @@ struct Vector2(T)
 	/// Casts a 2d vector from one type to another.
 	auto inout opCast(V: Vector2!U, U)() pure @safe @nogc nothrow const
 	{
-		return (V(x, y));
+		return (V(cast(U)x, cast(U)y));
 	}
 
 	bool opEquals(V: Vector2!U, U)(in V rhs) pure @safe @nogc nothrow const
