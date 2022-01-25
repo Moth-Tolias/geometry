@@ -110,12 +110,12 @@ mixin template actAsRectangle(PositionType, SizeType)
 
 	@property void x(in PositionType rhs) @safe @nogc nothrow
 	{
-		size.x = rhs;
+		position.x = rhs;
 	}
 
 	@property void y(in PositionType rhs) @safe @nogc nothrow
 	{
-		size.y = rhs;
+		position.y = rhs;
 	}
 
 	@property w() const @safe @nogc pure nothrow
