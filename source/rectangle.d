@@ -19,7 +19,7 @@ struct Rectangle(PositionType, SizeType)
 	static assert(__traits(isPOD, Rectangle!(PositionType, SizeType)));
 
 	Vector2!PositionType position; ///
-	Vector2!SizeType size; ///rectangles may have sizes of zero, but may never be negative.
+	Vector2!SizeType size; /// rectangles may have sizes of zero, but may never be negative.
 
 	invariant (size.x >= 0);
 	invariant (size.y >= 0);
@@ -85,10 +85,19 @@ struct Rectangle(PositionType, SizeType)
 *	r = a rectangle
 *	point = a 2d vector
 */
-static bool pointInRectangle(R : Rectangle!(T, U), T, U, V)(in R r, in Vector2!(V) point) pure @safe @nogc nothrow
+bool pointInRectangle(R : Rectangle!(T, U), T, U, V)(in R r, in Vector2!(V) point) pure @safe @nogc nothrow
 {
 	return ((point.x >= r.x) && (point.x <= (r.x + r.w))) && ((point.y >= r.y) && (point.y <= (r.y + r.h)));
 }
+
+/// ditto
+bool pointInRectangle(S, V)(in Vector2!S size, in Vector2!(V) point) pure @safe @nogc nothrow
+{
+	immutable zero = Vector2!ubyte (0, 0);
+	immutable r = Rectangle!(ubyte, S) (zero, size);
+	return pointInRectangle(r, point);
+}
+
 
 alias Rectangle(T) = Rectangle!(T, T);
 
@@ -161,4 +170,6 @@ mixin template actAsRectangle(T)
 
 	immutable r2 = Rectangle!size_t(Vector2!(size_t)(0), Vector2!(size_t)(size_t.max));
 	assert(r2.pointInRectangle(Vector2!(int)(ubyte.max)));
+
+	assert(pointInRectangle(Vector2!(int)(5), Vector2!(int)(2)));
 }
