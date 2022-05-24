@@ -14,8 +14,6 @@ import std.traits;
 struct Rectangle(PositionType, SizeType)
 if(isNumeric!PositionType && isNumeric!(SizeType))
 {
-	static assert(__traits(isPOD, Rectangle!(PositionType, SizeType)));
-
 	Vector2!PositionType position; ///
 	Vector2!SizeType size; /// rectangles may have sizes of zero, but may never be negative.
 
@@ -160,6 +158,8 @@ mixin template actAsRectangle(T)
 @safe @nogc nothrow unittest
 {
 	immutable r = Rectangle!int(Vector2!(int)(0), Vector2!(int)(32));
+	static assert(__traits(isPOD, typeof(r)));
+
 	assert(r.pointInRectangle(Vector2!(ubyte)(16)));
 	assert(r.pointInRectangle(Vector2!(int)(0)));
 	assert(r.pointInRectangle(Vector2!(int)(32)));

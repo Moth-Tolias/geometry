@@ -15,8 +15,6 @@ import std.traits;
 struct Vector2(T)
 if(isNumeric!T)
 {
-	static assert(__traits(isPOD, Vector2!T));
-
 	T x; /// X and Y components.
 	T y; /// ditto
 
@@ -155,6 +153,8 @@ float dot(V: Vector2!T, T, W: Vector2!U, U)(in V lhs, in W rhs) pure @safe @nogc
 
 @safe @nogc nothrow unittest
 {
+	static assert(__traits(isPOD, Vector2!int));
+
 	immutable a = Vector2!int(69, 420);
 	immutable b = Vector2!int(-10, +10);
 

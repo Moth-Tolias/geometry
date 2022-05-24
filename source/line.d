@@ -14,7 +14,6 @@ import std.traits: isNumeric;
 struct Line(T)
 if(isNumeric!T)
 {
-	static assert(__traits(isPOD, Line!T));
 	Vector2!(T) start; /// start of the line.
 	Vector2!(T) end; /// end of the line.
 
@@ -28,4 +27,6 @@ if(isNumeric!T)
 {
 	Line!int line;
 	line.start.x = 69;
+
+	static assert(__traits(isPOD, Line!int));
 }
