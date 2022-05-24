@@ -3,19 +3,18 @@
 * Authors: Susan
 * Date: 2021-09-12
 * Licence: AGPL-3.0 or later
-* Copyright: Hybrid Development Team, 2021
+* Copyright: Hybrid Development Team, 2022
 */
 
 module geometry.vector;
 
 import geometry.angle;
+import std.traits;
 
 /// 2d vector. T can be any numeric type.
 struct Vector2(T)
+if(isNumeric!T)
 {
-	import std.traits;
-
-	static assert(isNumeric!T);
 	static assert(__traits(isPOD, Vector2!T));
 
 	T x; /// X and Y components.
@@ -83,8 +82,8 @@ struct Vector2(T)
 
 	/// Scalar multiplication.
 	auto inout opBinary(string op, U)(in U rhs) pure @safe @nogc nothrow
+	if(isNumeric!U)
 	{
-		static assert(isNumeric!U);
 		static if (op != "*" && op != "/")
 		{
 			static assert(false, "not yet implemented");
@@ -98,8 +97,8 @@ struct Vector2(T)
 
 	/// ditto
 	void opOpAssign(string op, U)(in U rhs) pure @safe @nogc nothrow
+	if(isNumeric!U)
 	{
-		static assert(isNumeric!U);
 		static if (op != "*" && op != "/")
 		{
 			static assert(false, "not yet implemented");

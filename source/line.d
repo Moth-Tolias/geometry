@@ -3,20 +3,18 @@
 * Authors: Susan
 * Date: 2021-09-12
 * Licence: AGPL-3.0 or later
-* Copyright: Hybrid Development Team, 2021
+* Copyright: Hybrid Development Team, 2022
 */
 
 module geometry.line;
 import geometry.vector;
+import std.traits: isNumeric;
 
 /// T can be any numeric type.
 struct Line(T)
+if(isNumeric!T)
 {
-	import std.traits;
-
-	static assert(isNumeric!T);
 	static assert(__traits(isPOD, Line!T));
-
 	Vector2!(T) start; /// start of the line.
 	Vector2!(T) end; /// end of the line.
 
@@ -24,4 +22,10 @@ struct Line(T)
 	//{
 	//
 	//}
+}
+
+@nogc nothrow pure @safe unittest
+{
+	Line!int line;
+	line.start.x = 69;
 }

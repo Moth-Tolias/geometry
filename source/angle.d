@@ -3,15 +3,15 @@
 * Authors: Susan
 * Date: 2021-09-12
 * Licence: AGPL-3.0 or later
-* Copyright: Hybrid Development Team, 2021
+* Copyright: Hybrid Development Team, 2022
 */
 
 module geometry.angle;
 
 import std.math : PI;
 
-alias pi = PI;
-auto tau = (pi * 2); ///the better circle constant
+alias pi = PI; //why is this not lowercase by default
+enum tau = (pi * 2); ///the better circle constant
 
 ///representation of an angle in degrees.
 struct Angle
@@ -28,9 +28,8 @@ struct Angle
 	{
 		import std.math : isNaN;
 
-		assert(!isNaN(value));
-		assert(value >= Min);
-		assert(value <= Max);
+		assert(!isNaN(value), "angle may not be NaN");
+		assert((value >= Min) && (value <= Max), "angle out of bounds");
 	}
 
 	///

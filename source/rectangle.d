@@ -3,19 +3,17 @@
 * Authors: Susan
 * Date: 2021-09-12
 * Licence: AGPL-3.0 or later
-* Copyright: Hybrid Development Team, 2021
+* Copyright: Hybrid Development Team, 2022
 */
 
 module geometry.rectangle;
 import geometry.vector;
+import std.traits;
 
 ///T can be any numeric type.
 struct Rectangle(PositionType, SizeType)
+if(isNumeric!PositionType && isNumeric!(SizeType))
 {
-	import std.traits;
-
-	static assert(isNumeric!PositionType);
-	static assert(isNumeric!(SizeType));
 	static assert(__traits(isPOD, Rectangle!(PositionType, SizeType)));
 
 	Vector2!PositionType position; ///
