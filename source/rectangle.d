@@ -14,6 +14,8 @@ import std.traits;
 struct Rectangle(PositionType, SizeType)
 if(isNumeric!PositionType && isNumeric!(SizeType))
 {
+	static assert(__traits(isPOD, typeof(this)));
+
 	///
 	mixin actAsRectangle!(PositionType, SizeType);
 }
@@ -29,7 +31,7 @@ alias Rectangle(T) = Rectangle!(T, T);
 */
 bool pointInRectangle(R : Rectangle!(T, U), T, U, V)(in R r, in Vector2!(V) point) @nogc nothrow pure @safe
 {
-	return ((point.x >= r.x) && (point.x <= (r.x + r.w))) && ((point.y >= r.y) && (point.y <= (r.y + r.h)));
+	return ((point.x >= r.x) && (point.x < (r.x + r.w))) && ((point.y >= r.y) && (point.y < (r.y + r.h)));
 }
 
 /// ditto
@@ -43,19 +45,17 @@ bool pointInRectangle(S, V)(in Vector2!S size, in Vector2!(V) point) @nogc nothr
 ///
 @safe @nogc nothrow unittest
 {
-	immutable r = Rectangle!int(Vector2!(int)(0), Vector2!(int)(32));
-	static assert(__traits(isPOD, typeof(r)));
+	immutable r = Rectangle!int(Vector2!(int)(0), Vector2!(int)(3));
 
-	assert(r.pointInRectangle(Vector2!(ubyte)(16)));
+	assert(!r.pointInRectangle(Vector2!(int)(-1)));
 	assert(r.pointInRectangle(Vector2!(int)(0)));
-	assert(r.pointInRectangle(Vector2!(int)(32)));
+	assert(r.pointInRectangle(Vector2!(ubyte)(2)));
+	assert(!r.pointInRectangle(Vector2!(int)(3)));
 
-	assert(!r.pointInRectangle(Vector2!(int)(-16)));
-
-	immutable r2 = Rectangle!size_t(Vector2!(size_t)(0), Vector2!(size_t)(size_t.max));
-	assert(r2.pointInRectangle(Vector2!(int)(ubyte.max)));
-
-	assert(pointInRectangle(Vector2!(int)(5), Vector2!(int)(2)));
+	immutable r2 = Rectangle!int(Vector2!(int)(0), Vector2!(int)(0));
+	assert(!r.pointInRectangle(Vector2!(int)(-1)));
+	assert(!r2.pointInRectangle(Vector2!(int)(0)));
+	assert(!r2.pointInRectangle(Vector2!(ubyte)(1)));
 }
 
 ///allows a struct to act as, and be cast to, a rectangle.
