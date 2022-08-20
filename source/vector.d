@@ -123,7 +123,7 @@ if(isNumeric!T)
 	}
 
 	/// sets the vector to its corresponding unit vector.
-	void normalise() @safe @nogc nothrow
+	void normalise() @safe @nogc nothrow //todo:pure
 	{
 		immutable temp = this.normalised;
 		this.x = cast(T) temp.x;
