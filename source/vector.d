@@ -67,6 +67,14 @@ if(isNumeric!T)
 	}
 
 	/// ditto
+	auto inout opUnary(string s)() pure @safe @nogc nothrow
+		if (s == "-")
+    {
+		import std.traits: Unqual;
+		return Vector2!(Unqual!(typeof(-x)))(-x, -y);
+    }
+
+	/// ditto
 	void opOpAssign(string op, V: Vector2!U, U)(in V rhs) pure @safe @nogc nothrow
 	{
 		static if (op != "+" && op != "-" && op != "*" && op != "/")
