@@ -11,17 +11,22 @@ import geometry.vector;
 import std.traits;
 
 ///
-struct Rectangle(PositionType, SizeType)
-if(isNumeric!PositionType && isNumeric!(SizeType))
+struct Rectangle(T)
+if(isNumeric!T)
 {
-	static assert(__traits(isPOD, typeof(this)));
+	Vector2!T position; ///
+	Vector2!T size; /// rectangles may have sizes of zero, but may never be negative.
 
-	///
-	mixin actAsRectangle!(PositionType, SizeType);
+	invariant (size.x >= 0 && size.y >= 0);
+
+	@property ref x() inout => position.x; ///
+	@property ref y() inout => position.y; ///
+	@property ref width() inout => size.x; ///
+	@property ref height() inout => size.y; ///
+
+	alias w = width; ///
+	alias h = height; ///
 }
-
-/// ditto
-alias Rectangle(T) = Rectangle!(T, T);
 
 /**
 * Returns: whether a point is within the bounds of the rectangle.
@@ -29,7 +34,7 @@ alias Rectangle(T) = Rectangle!(T, T);
 *	r = a rectangle
 *	point = a 2d vector
 */
-bool pointInRectangle(R : Rectangle!(T, U), T, U, V)(in R r, in Vector2!(V) point) @nogc nothrow pure @safe
+bool pointInRectangle(R : Rectangle!(T), T, V)(in R r, in Vector2!(V) point) @nogc nothrow pure @safe
 {
 	return ((point.x >= r.x) && (point.x < (r.x + r.w))) && ((point.y >= r.y) && (point.y < (r.y + r.h)));
 }
@@ -37,8 +42,8 @@ bool pointInRectangle(R : Rectangle!(T, U), T, U, V)(in R r, in Vector2!(V) poin
 /// ditto
 bool pointInRectangle(S, V)(in Vector2!S size, in Vector2!(V) point) @nogc nothrow pure @safe
 {
-	immutable zero = Vector2!ubyte (0, 0); //todo: zero, one
-	immutable r = Rectangle!(ubyte, S) (zero, size);
+	immutable zero = Vector2!S (0, 0); //todo: zero, one
+	immutable r = Rectangle!S (zero, size);
 	return pointInRectangle(r, point);
 }
 
@@ -52,87 +57,7 @@ bool pointInRectangle(S, V)(in Vector2!S size, in Vector2!(V) point) @nogc nothr
 	assert(r.pointInRectangle(Vector2!(ubyte)(2)));
 	assert(!r.pointInRectangle(Vector2!(int)(3)));
 
-	immutable r2 = Rectangle!int(Vector2!(int)(0), Vector2!(int)(0));
-	assert(!r.pointInRectangle(Vector2!(int)(-1)));
-	assert(!r2.pointInRectangle(Vector2!(int)(0)));
-	assert(!r2.pointInRectangle(Vector2!(ubyte)(1)));
-}
-
-///allows a struct to act as, and be cast to, a rectangle.
-mixin template actAsRectangle(PositionType, SizeType)
-if(isNumeric!PositionType && isNumeric!(SizeType))
-{
-	Vector2!PositionType position; ///
-	Vector2!SizeType size; /// rectangles may have sizes of zero, but may never be negative.
-
-	invariant (size.x >= 0);
-	invariant (size.y >= 0);
-
-	/// x component of position.
-	@property PositionType x() const @nogc nothrow pure @safe
-	{
-		return position.x;
-	}
-
-	/// ditto
-	@property void x(in PositionType rhs) @nogc nothrow pure @safe
-	{
-		position.x = rhs;
-	}
-
-	/// y component of position.
-	@property PositionType y() const @nogc nothrow pure @safe
-	{
-		return position.y;
-	}
-
-	/// ditto
-	@property void y(in PositionType rhs) @nogc nothrow pure @safe
-	{
-		position.y = rhs;
-	}
-
-	/// width component of size.
-	@property SizeType width() const @nogc nothrow pure @safe
-	{
-		return size.x;
-	}
-
-	/// ditto
-	@property void width(in SizeType rhs) @nogc nothrow pure @safe
-	{
-		size.x = rhs;
-	}
-
-	/// ditto
-	alias w = width;
-
-	/// height component of size.
-	@property SizeType height() const @nogc nothrow pure @safe
-	{
-		return size.y;
-	}
-
-	/// ditto
-	@property void height(in SizeType rhs) @nogc nothrow pure @safe
-	{
-		size.y = rhs;
-	}
-
-	/// ditto
-	alias h = height;
-
-	///
-	Rectangle opCast(Rectangle)() const @nogc nothrow pure @safe
-	{
-		return Rectangle(position, size);
-	}
-}
-
-/// ditto
-mixin template actAsRectangle(T)
-if (isNumeric!T)
-{
-	///
-	mixin actAsRectangle!(T, T);
+	assert(!pointInRectangle(Vector2!(int)(0), Vector2!(int)(-1)));
+	assert(!pointInRectangle(Vector2!(int)(0), Vector2!(int)(0)));
+	assert(!pointInRectangle(Vector2!(int)(0), Vector2!(ubyte)(1)));
 }
