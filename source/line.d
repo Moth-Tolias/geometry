@@ -14,13 +14,26 @@ import std.traits: isNumeric;
 struct Line(T)
 if(isNumeric!T)
 {
-	Vector2!(T) start; /// start of the line.
-	Vector2!(T) end; /// end of the line.
+	Vector2!(T) start; ///
+	Vector2!(T) end; ///
 
 	//static Vector2!(float) nearestPoint(Line line, Vector2!(float) a)
 	//{
 	//
 	//}
+
+	///
+	bool opEquals(L: Line!U, U)(in L rhs) pure @safe @nogc nothrow const
+	{
+		//todo: should lines really be directionless?
+		return ((start == rhs.start) && (end == rhs.end)) || ((start == rhs.end) && (end == rhs.start));
+	}
+
+	///
+	size_t toHash() pure @safe @nogc nothrow const
+	{
+		return cast(size_t)(start.toHash + end.toHash);
+	}
 }
 
 @nogc nothrow pure @safe unittest

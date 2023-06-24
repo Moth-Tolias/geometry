@@ -28,10 +28,11 @@ if(isNumeric!T)
 	alias w = width; ///
 	alias h = height; ///
 
-	auto up() const => Line!T(position, Vector2!T(x + width, y));
-	auto down() const => Line!T(Vector2!T(x, y + height), Vector2!T(x + width, y + height));
-	auto left() const => Line!T(position, Vector2!T(x, y + height));
-	auto right() const => Line!T(Vector2!T(x + width, y), Vector2!T(x + width, y + height));
+	private alias LineType = typeof(T + T);
+	auto up() const => Line!LineType(cast(Vector2!LineType)position, Vector2!LineType(x + width, y));
+	auto down() const => Line!LineType(Vector2!LineType(x, y + height), Vector2!LineType(x + width, y + height));
+	auto left() const => Line!LineType(cast(Vector2!LineType)position, Vector2!LineType(x, y + height));
+	auto right() const => Line!LineType(Vector2!LineType(x + width, y), Vector2!LineType(x + width, y + height));
 }
 
 ///
@@ -62,9 +63,9 @@ bool pointInRectangle(S, V)(in Vector2!S size, in Vector2!(V) point) @nogc nothr
 	assert(!pointInRectangle(Vector2!(int)(0), Vector2!(int)(0)));
 	assert(!pointInRectangle(Vector2!(int)(0), Vector2!(ubyte)(1)));
 
-	immutable r2 = Rectangle!int(Vector2!(int)(0, 3), Vector2!(int)(3, 4));
-	assert(r2.up == Line!int(Vector2!int(0, 3), Vector2!int(3, 3)));
-	assert(r2.down == Line!int(Vector2!int(0, 7), Vector2!int(3, 7)));
-	assert(r2.left == Line!int(Vector2!int(0, 3), Vector2!int(0, 7)));
-	assert(r2.right == Line!int(Vector2!int(3, 3), Vector2!int(3, 7)));
+	immutable r2 = Rectangle!ubyte(Vector2!(ubyte)(0, 3), Vector2!(ubyte)(3, 4));
+	assert(r2.up == Line!ubyte(Vector2!ubyte(0, 3), Vector2!ubyte(3, 3)));
+	assert(r2.down == Line!ubyte(Vector2!ubyte(0, 7), Vector2!ubyte(3, 7)));
+	assert(r2.left == Line!ubyte(Vector2!ubyte(0, 3), Vector2!ubyte(0, 7)));
+	assert(r2.right == Line!ubyte(Vector2!ubyte(3, 3), Vector2!ubyte(3, 7)));
 }
