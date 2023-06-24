@@ -5,10 +5,11 @@
 * Licence: AGPL-3.0 or later
 * Copyright: Hybrid Development Team, 2022
 */
-
 module geometry.rectangle;
+
+import geometry.line;
 import geometry.vector;
-import std.traits;
+import std.traits: isNumeric;
 
 ///
 struct Rectangle(T)
@@ -26,20 +27,20 @@ if(isNumeric!T)
 
 	alias w = width; ///
 	alias h = height; ///
+
+	auto up() const => Line!T(position, Vector2!T(x + width, y));
+	auto down() const => Line!T(Vector2!T(x, y + height), Vector2!T(x + width, y + height));
+	auto left() const => Line!T(position, Vector2!T(x, y + height));
+	auto right() const => Line!T(Vector2!T(x + width, y), Vector2!T(x + width, y + height));
 }
 
-/**
-* Returns: whether a point is within the bounds of the rectangle.
-* Params:
-*	r = a rectangle
-*	point = a 2d vector
-*/
+///
 bool pointInRectangle(R : Rectangle!(T), T, V)(in R r, in Vector2!(V) point) @nogc nothrow pure @safe
 {
 	return ((point.x >= r.x) && (point.x < (r.x + r.w))) && ((point.y >= r.y) && (point.y < (r.y + r.h)));
 }
 
-/// ditto
+///
 bool pointInRectangle(S, V)(in Vector2!S size, in Vector2!(V) point) @nogc nothrow pure @safe
 {
 	immutable zero = Vector2!S (0, 0); //todo: zero, one
@@ -60,4 +61,10 @@ bool pointInRectangle(S, V)(in Vector2!S size, in Vector2!(V) point) @nogc nothr
 	assert(!pointInRectangle(Vector2!(int)(0), Vector2!(int)(-1)));
 	assert(!pointInRectangle(Vector2!(int)(0), Vector2!(int)(0)));
 	assert(!pointInRectangle(Vector2!(int)(0), Vector2!(ubyte)(1)));
+
+	immutable r2 = Rectangle!int(Vector2!(int)(0, 3), Vector2!(int)(3, 4));
+	assert(r2.up == Line!int(Vector2!int(0, 3), Vector2!int(3, 3)));
+	assert(r2.down == Line!int(Vector2!int(0, 7), Vector2!int(3, 7)));
+	assert(r2.left == Line!int(Vector2!int(0, 3), Vector2!int(0, 7)));
+	assert(r2.right == Line!int(Vector2!int(3, 3), Vector2!int(3, 7)));
 }
