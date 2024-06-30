@@ -148,7 +148,7 @@ if(isNumeric!T)
 		}
 		else
 		{
-			return (this / len);
+			return cast(Vector2!float)(this / len);
 		}
 	}
 }
